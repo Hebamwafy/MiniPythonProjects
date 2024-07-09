@@ -21,7 +21,7 @@ def search():
         
         perciption = 0 # no perciption in api data
 
-        result = (f"Temperature: {temperature}°C\n"
+        result = (f"Temperature: {temperature:.2f}°C\n"
                   f"Pressure: {pressure} hPa\n"
                   f"Humidity: {humidity}%\n"
                   f"Wind Speed: {wind_speed} m/s\n"
