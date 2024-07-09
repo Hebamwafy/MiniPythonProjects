@@ -5,35 +5,27 @@ import requests
 def search():
     location=location_entry.get()
     api_key="b450ba2b6752c95c662e8fd00fff1bb7"
-    url = f"https://api.openweathermap.org/data/2.5/weather?q={location}&appid={api_key}"
-    payload={}
-    headers={
-    "apikey": "b450ba2b6752c95c662e8fd00fff1bb7"
-    }
-    response = requests.request("GET", url, headers=headers, data=payload)
+    url= f"https://api.openweathermap.org/data/2.5/weather?q={location}&appid={api_key}"
     try:
         
-        complete_url = f"{url}?q={location}&appid={api_key}&units=metric"
-        response = requests.request("GET", complete_url, headers=headers, data=payload)
+        response = requests.get(url)
         data = response.json()
             
-        current = data["current"]
-        daily = data["daily"][0]
+        current = data["main"]
+        daily = data["wind"]
         
-        temperature = current["temp"]
+        temperature = current["temp"]- 273.15
         pressure = current["pressure"]
         humidity = current["humidity"]
-        wind_speed = current["wind_speed"]
-        weather_description = current["weather"][0]["description"]
+        wind_speed = daily["speed"]
         
-        precipitation = daily.get("pop", 0) * 100
+        perciption = 0 # no perciption in api data
 
         result = (f"Temperature: {temperature}°C\n"
                   f"Pressure: {pressure} hPa\n"
                   f"Humidity: {humidity}%\n"
                   f"Wind Speed: {wind_speed} m/s\n"
-                  f"Description: {weather_description.capitalize()}\n"
-                  f"Chance of Rain: {precipitation}%")
+                  f"Chance of Rain: {perciption}%")
         
         weather_result.config(text=result)
     except Exception as e:
@@ -41,8 +33,7 @@ def search():
 
 window = tk.Tk()
 window.title("Weather Forecast")
-window.rowconfigure(0,minsize=600)
-window.columnconfigure(1,minsize=800)
+window.minsize(width=300, height=250)
 
 frame_buttons = tk.Frame(window,relief=tk.RAISED)
 search_btn = tk.Button(frame_buttons, text="Search", command=search, height=1)
